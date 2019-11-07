@@ -4,11 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"syscall"
 	"unicode"
 
 	"github.com/pkg/term/termios"
 )
+
+func refreshScreen() {
+	cmd := exec.Command("clear")
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
 
 var origTermios syscall.Termios
 
@@ -26,6 +33,7 @@ func enableRawMode() {
 
 func main() {
 	enableRawMode()
+	refreshScreen()
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -41,7 +49,7 @@ func main() {
 		}
 
 		if unicode.IsControl(r) {
-
+			fmt.Printf("%d", r)
 		} else {
 			fmt.Printf("%c", r)
 		}
